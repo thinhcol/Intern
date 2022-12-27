@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+.drag-area{
+    border: 2px dashed #000000;
+    height: 350px;
+    width: 300px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    margin: 0px;
+}
+.drag-area.active{
+    border: 2px solid black;
+}
+.drag-area .icon{
+    font-size: 100px;
+    color: black;
+}
+.drag-area header{
+    font-size: 30px;
+    font-weight: 500;
+    color: black;
+}
+.drag-area span{
+    font-size: 25px;
+    font-weight: 500;
+    color: black;
+    margin: 10px 0 15px 0;
+}
+.drag-area button{
+    padding: 10px 25px;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+    outline: none;
+    background: #fff;
+    color: #5256ad;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.drag-area img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.formfile{
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 1135px;
+    height: 396px;
+    left: 512px;
+    top: 185px;
+
+    background: #FFFFFF;
+    border: 1px solid rgba(229, 229, 229, 0.74);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dialog-body {
+    max-width: 400px;
+    position: relative;
+    padding: 16px;
+    background-color: #fff;
+}
+
+.dialog-close-btn {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    text-decoration: none;
+    color: #333;
+}

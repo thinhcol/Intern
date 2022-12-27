@@ -1,0 +1,181 @@
+<style>
+    .form-group{
+        width: 35%;
+        margin: 0 7%;
+    }
+    .mb-5 {
+        margin-bottom: 10rem!important;
+    }
+</style>
+<div class="tab-form">
+    <div class="input-group mb-5 ml-6">
+        <br>
+        <br>
+        <div class="form-group">
+            <h5>Thực hiện tài tệp tin mẫu để đối chiếu</h5>
+            <input type="file" name="myFile">
+
+            <div class="drop-zone">
+                <span class="drop-zone__prompt">Choose file or drop here</span>
+                <input type="file" id="inp1" name="myFile" class="drop-zone__input">
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="form-group">
+            <h5>Thực hiện tải tệp tin cần đối chiếu với tệp tin mẫu</h5>
+            <input type="file" name="myFile1">
+            <div class="drop-zone">
+                <span class="drop-zone__prompt">Choose file or drop here</span>
+                <input type="file" id="inp2" name="myFile1" class="drop-zone__input">
+            </div>
+        </div>
+    </div>
+    <br>
+    <button class="btnkiemtra" data-toggle="modal" data-target="#modalex" onclick="kiemtra()"
+            type="submit">Kiểm tra
+    </button>
+    <div class="modal fade " id="modalex" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mx-auto mt-3 mb-5">
+                    <img src="/shield 1.png"/>
+                    <p>Toàn vẹn dữ liệu</p>
+                    <button class="btn btn-outline-success btn-lg">Success</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function reset(){
+        inp1.files = null;
+        inp2.files = null;
+    }
+    function kiemtra() {
+        if (inp1.files.length > 0 && inp2.files.length > 0) {
+            const file1 = inp1.files[0];
+            const file2 = inp2.files[0];
+
+            if (!file1 || !file2) return;
+            let check;
+            compare(file1, file2)
+                .then(res => {
+                    if (typeof res != "undefined") {
+                        check = res;
+                        if (check == false) {
+                            document.getElementById("modalex").innerHTML =
+                                "<div class=\'modal-dialog modal-dialog-centered\'>\n" +
+                                "                            <div class=\'modal-content\'>\n" +
+                                "                                <div class=\'mx-auto mt-3 mb-5\'>\n" +
+                                "                                    <img src=\'/images/No data-cuate (1) 1.png\'/>\n" +
+                                "                                    <h6 class=\'text-center\'>Không toàn vẹn dữ liệu</h6>\n" +
+                                "                                    <button class=\'btn btn-outline-danger btn-lg\' data-dismiss='modal'>Đồng ý</button>\n" +
+                                "                                </div>\n" +
+                                "\n" +
+                                "                            </div>\n" +
+                                "                        </div>"
+                            reset();
+                        } else if (check == true) {
+                            document.getElementById("modalex").innerHTML =
+                                "<div class=\'modal-dialog modal-dialog-centered\'>\n" +
+                                "                            <div class=\'modal-content\'>\n" +
+                                "                                <div class=\'mx-auto mt-3 mb-5\'>\n" +
+                                "                                    <img src=\'/images/shield%201.png\' />\n" +
+                                "                                    <h6 class=\'text-center\'>Toàn vẹn dữ liệu</h6>\n" +
+                                "                                    <button class=\'btn btn-outline-success btn-lg\' data-dismiss='modal'>Success</button>\n" +
+                                "                                </div>\n" +
+                                "\n" +
+                                "                            </div>\n" +
+                                "                        </div>"
+                            reset();
+                        }
+                    }
+
+                });
+
+
+        } else {
+            console.log("Lỗi")
+        }
+    }
+
+
+    function compare(file1, file2) {
+        if (file1.size !== file2.size)
+            return Promise.resolve(false);
+        return Promise.all([
+            readAsArrayBuffer(file1),
+            readAsArrayBuffer(file2)
+        ]).then(([buf1, buf2]) => {
+            const arr1 = new Uint8Array(buf1);
+            const arr2 = new Uint8Array(buf2);
+            return !arr1.some((val, i) =>
+                arr2[i] !== val
+            );
+        });
+    }
+
+    function readAsArrayBuffer(file) {
+        return new Response(file).arrayBuffer();
+    }
+    document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+        const dropZoneElement = inputElement.closest(".drop-zone");
+
+        dropZoneElement.addEventListener("click", (e) => {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener("change", (e) => {
+            if (inputElement.files.length) {
+                updateThumbnail(dropZoneElement, inputElement.files[0]);
+            }
+        });
+
+        dropZoneElement.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZoneElement.classList.add("drop-zone--over");
+        });
+
+        ["dragleave", "dragend"].forEach((type) => {
+            dropZoneElement.addEventListener(type, (e) => {
+                dropZoneElement.classList.remove("drop-zone--over");
+            });
+        });
+
+        dropZoneElement.addEventListener("drop", (e) => {
+            e.preventDefault();
+
+            if (e.dataTransfer.files.length) {
+                inputElement.files = e.dataTransfer.files;
+                updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+            }
+
+            dropZoneElement.classList.remove("drop-zone--over");
+        });
+    });
+
+    function updateThumbnail(dropZoneElement, file) {
+        let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+        if (dropZoneElement.querySelector(".drop-zone__prompt")) {
+            dropZoneElement.querySelector(".drop-zone__prompt").remove();
+        }
+        if (!thumbnailElement) {
+            thumbnailElement = document.createElement("div");
+            thumbnailElement.classList.add("drop-zone__thumb");
+            dropZoneElement.appendChild(thumbnailElement);
+        }
+        thumbnailElement.dataset.label = file.name;
+        if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            // reader.onload = () => {
+            //     thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
+            // };
+        } else {
+            thumbnailElement.style.backgroundImage = null;
+        }
+    }
+</script>

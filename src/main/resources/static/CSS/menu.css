@@ -1,0 +1,240 @@
+html{
+    width: 98%;
+
+}
+
+.logo {
+    position: absolute;
+    width: 10%;
+    height: 200%;
+    left: 2%;
+    top: 30%;
+}
+
+.navbar-brand {
+    position: absolute;
+    /* width: 232px; */
+    /* height: 19px; */
+    left: 0.5%;
+    top: 170%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 100%;
+    line-height: 19px;
+    text-align: center;
+    font-weight: bolder;
+    color: #4B4B4D;
+}
+
+.timkiem {
+    box-sizing: border-box;
+    position: absolute;
+    width: 60%;
+    height: 130%;
+    left: 20%;
+    top: 95%;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    backdrop-filter: blur(4px);
+    border-radius: 30px;
+}
+.timkiem:focus{
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+}
+
+/*.btn1 {*/
+/*    position: absolute;*/
+/*    top: 30px;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    left: 1400px;*/
+/*}*/
+
+.btn1:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.vn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 85%;
+    top: 32px;
+}
+
+.usa {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 88%;
+    top: 32px;
+}
+
+.user {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 92%;
+    top: 32px;
+}
+
+.usertk {
+    position: absolute;
+    width: 79px;
+    height: 18px;
+    left: 94%;
+    top: 44px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: bolder;
+    text-align: center;
+    color: #262626;
+}
+
+.user1 {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 100%;
+    top: 45px;
+}
+
+hr {
+    margin-top: 4%;
+}
+/*h3 {*/
+/*    position: absolute;*/
+/*    width: 121px;*/
+/*    height: 18px;*/
+/*    left: 9px;*/
+/*    top: 118px;*/
+/*    font-family: 'Arial';*/
+/*    font-style: normal;*/
+/*    font-weight: 700;*/
+/*    font-size: 16px;*/
+/*    line-height: 18px;*/
+/*    text-align: center;*/
+/*    color: #4B4B4D;*/
+/*}*/
+
+.list-group {
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 9px;
+}
+
+.list {
+    margin-top: 20px;
+    margin-right: 10px;
+    height: 45px;
+    left: 42px;
+    top: 250px;
+    font-family: 'Arial';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 15px;
+    line-height: 3;
+    color: #5F6368;
+    cursor: pointer;
+}
+
+.list img {
+    margin-right: 10px;
+}
+
+.day {
+    margin-top: 10px;
+}
+
+.text {
+    position: absolute;
+    width: 92px;
+    height: 17px;
+    left: 485px;
+    top: 140px;
+    font-family: 'Arial';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 17px;
+    text-align: center;
+    color: #5F6368;
+}
+
+.table {
+    box-sizing: border-box;
+    background: #FFFFFF;
+    border: 1px solid #D9DEE2;
+    border-radius: 5px;
+}
+
+.chu {
+    position: absolute;
+    width: 171px;
+    height: 33px;
+    left: 1020px;
+    top: 500px;
+}
+.nav-link:focus {
+    background: #6eb43f;
+    color: #ffffff;
+    border-radius: 0 28px 28px 0
+
+}
+.nav-link:hover {
+    background: #6eb43f;
+    color: #ffffff;
+    border-radius: 0 28px 28px 0
+
+}
+
+a{
+    font-family: 'Arial';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    color: #5F6368;
+    cursor: pointer;
+    text-decoration: none;
+}
+/*.filemail{*/
+/*    box-sizing: border-box;*/
+
+/*    position: absolute;*/
+/*    width: 140px;*/
+/*    height: 31px;*/
+/*    left: 514px;*/
+/*    top: 329px;*/
+
+/*    background: #FFFFFF;*/
+/*    border: 1px solid #E5E5E5;*/
+/*    border-radius: 5px;*/
+/*}*/
+/*.filemail > .tenfile{*/
+/*    position: absolute;*/
+/*    width: 101px;*/
+/*    height: 10px;*/
+/*    left: 540px;*/
+/*    top: 334px;*/
+/*    font-family: 'Arial';*/
+/*    font-style: normal;*/
+/*    font-weight: 700;*/
+/*    font-size: 9px;*/
+/*    line-height: 10px;*/
+/*    text-align: center;*/
+/*    color: #4B4B4D;*/
+/*}*/
+/*.filemail > .img-file {*/
+/*    position: absolute;*/
+/*    width: 18px;*/
+/*    height: 18px;*/
+/*    left: 519px;*/
+/*    top: 335px;*/
+/*}*/

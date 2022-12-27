@@ -1,0 +1,880 @@
+<style>
+
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .checknguoi {
+        top: 10px;
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border-radius: 50%;
+        vertical-align: middle;
+        border: 1px solid #6EB43F;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        /* outline: none; */
+        /* cursor: pointer; */
+        /* filter: hue-rotate(240deg); */
+        /* background: green !important; */
+        /* accent-color: #6EB43F;
+            /*outline: none;*/
+        /*cursor: pointer;*/
+
+        /*filter: hue-rotate(240deg);*/
+
+        /*background: green !important;*/
+        /*accent-color: #6EB43F;*/
+    }
+
+    .iconschiase {
+        top: 10px;
+        left: 20px;
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border-radius: 50%;
+        vertical-align: middle;
+        border: 1px solid #6EB43F;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        /* outline: none; */
+        /* cursor: pointer; */
+        /* filter: hue-rotate(240deg); */
+        /* background: green !important; */
+        /* accent-color: #6EB43F;
+            /*outline: none;*/
+        /*cursor: pointer;*/
+
+        /*filter: hue-rotate(240deg);*/
+
+        /*background: green !important;*/
+        /*accent-color: #6EB43F;*/
+    }
+
+    .form-check-label {
+        position: absolute;
+        left: 14%;
+    }
+
+    small {
+        position: absolute;
+        color: #6c757d !important;
+        left: 125px;
+    }
+
+    .checknguoi:checked {
+        background-color: #6EB43F;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 140px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .dropdown-item:hover {
+        color: #6EB43F;
+    }
+
+    .checkbox:checked:before {
+        background-color: green;
+    }
+</style>
+<div class="tab-content" id="vert-tabs-tabContent">
+    <div class="card-header bg-white">
+        <div class="row">
+            <div class="card mr-1 text-center" style="width: 10.5rem;" ng-repeat="item in history.content">
+                <img src="/images/Screen%20Shot%202022-05-12%20at%2015.05%201.png" class="card-img-top" alt="...">
+                <a href="/rest/files/readfile/{{item.file.idfile}}"
+                   class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04">
+                    <h6 class="mt-2 text-truncate"><img src="/images/pdf%208.png"> {{item.file.name}}</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <table class="table table-borderless">
+            <thead class="table-secondary">
+            <tr>
+                <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()"></th>
+                <th scope="col">Tên</th>
+                <th scope="col">Thời gian tạo</th>
+                <th scope="col">Kích thước</th>
+                <th scope="col">Hành động</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="item in folder | filter: searchtext">
+            <tr>
+                <th><input type="checkbox" ng-checked="checkfile(item)"
+                           ng-click="checkbox(item.folder)" class="child1">
+                </th>
+                <td class="col-2 text-truncate"><img
+                        src="/images/folder%2023.png"> <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="#!truyxuatfolder/{{item.folder}}/{{menu}}/{{quanly}}">{{item.folder}}</a>
+                </td>
+                <td>{{item.datecreate | date:'dd/MM/yyyy h:mm a'}}</td>
+                <td>
+                    <div ng-if="checksize(item.sumsize) == true">{{item.sumsize / (1024 * 1024) | number:0}} MB</div>
+                    <div ng-if="checksize(item.sumsize) == false">{{item.sumsize / 1024 | number:0}} KB</div>
+                </td>
+                <td><a class="link-light" data-toggle="dropdown"><img src="/images/resize%201.png" alt=""></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" data-toggle="modal" data-target="#phanquyen" ng-click="filedform(item)"><img
+                                src="/images/user%201.png"
+                                alt=""> Phân quyền truy
+                            cập</a>
+
+                        <div ng-if="truefalse(item,account,14,15,11) == true">
+                            <a class="dropdown-item disabled" data-toggle="modal" data-target="#chiase"><img
+                                    src="/images/share%20(2)%201.png" alt=""> Chia sẻ</a>
+                        </div>
+                        <div ng-if="truefalse(item,account,14,15,11) == false">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#chiase"><img
+                                    src="/images/share%20(2)%201.png" alt=""> Chia sẻ</a>
+                        </div>
+
+                        <a class="dropdown-item" data-toggle="modal" data-target="#nhanduongdan"><img
+                                src="/images/link%201%20(1).png" alt=""> Nhận đường dẫn</a>
+                        <div ng-if="truefalse(item,account,9,10,6) == true">
+                            <a class="dropdown-item disabled"><img
+                                    src="/images/download%201%20(1).png" alt=""> Tải xuống</a>
+                        </div>
+
+                        <div ng-if="truefalse(item,account,9,10,6) == false">
+                            <a class="dropdown-item" href="/rest/files/downloadfile/{{item.idfile}}"><img
+                                    src="/images/download%201%20(1).png" alt=""> Tải xuống</a>
+                        </div>
+
+                        <div ng-if="checkfavorite(item,account) == true">
+                            <a class="dropdown-item" ng-click="xoafav(item,account)"><img
+                                    src="/images/star%202.png" alt="">
+                                Xoá khỏi danh sách tài liệu có đánh dấu
+                                sao</a>
+                        </div>
+                        <div ng-if="checkfavorite(item,account) == false">
+                            <a class="dropdown-item" ng-click="themfav(item,account)"><img
+                                    src="/images/star%202.png" alt="">
+                                Thêm vào danh sách tài liệu có đánh dấu
+                                sao</a>
+                        </div>
+
+                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal1"
+                           data-name="{{item.name}}" data-id="{{item.idfile}}"
+                           onclick="showconfig(this.getAttribute('data-id'),this.getAttribute('data-name'))"><img
+                                src="/images/email%201.png" alt=""> Gửi
+                            mail</a>
+
+                    </div>
+                    <div class="modal fade" id="nhanduongdan" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title" id="ipo">Nhận đường dẫn</h2>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row align-items-center">
+
+                                        <div class="col-auto">
+                                            <input type="text" class="form-control" value="" id="myInput">
+                                        </div>
+                                        <div title="Login" class="col-auto">
+                                            <label class="col-form-label"> <a onclick="myFunction()">Sao chép liên
+                                                kết</a></label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Hoàn thành
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="chiase" tabindex="-1"
+                         aria-labelledby="chiase"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form>
+                                    <div class="card card-Secondary card-outline">
+                                        <div class="card-header">
+                                            Chia sẻ
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <tags-input ng-model="lst" add-from-autocomplete-only="true"
+                                                            text="text">
+                                                    <auto-complete source="loadTags($query)"></auto-complete>
+                                                </tags-input>
+                                            </div>
+                                            <div class="wrapper">
+                                                Đề xuất:
+                                                <div class="card text-left">
+                                                    <div class="card-body" ng-repeat="acc in accounts">
+                                                        <input type="checkbox"
+                                                               class="checknguoi"
+                                                               name="inlineRadioOptions"
+                                                               ng-checked="kiemtra(acc.username)"
+                                                               ng-click="change(acc.username)">
+                                                        <img src="/images/profile%20(1)%203.png"
+                                                             class="iconschiase">
+                                                        <label class="form-check-label">
+                                                            {{acc.fullname}}
+                                                        </label>
+                                                        <br><small class="text-muted">{{acc.email}}</small>
+                                                        <hr>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                        <textarea class="form-control" style="height: 100px" ng-model="notice.text"
+                                                  placeholder="Lời nhắn:"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                                        </button>
+
+                                        <button ng-click="chiase(account)" type="submit" class="btn btn-success"
+                                                data-dismiss="modal" data-toggle="modal" data-target="#{{idclass}}">
+                                            <i class="far fa-envelope"></i> Chia sẻ
+                                        </button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="exampleModal1" >
+                        <div class="modal-dialog" style="max-width: 1000px;">
+                            <form method="post">
+                                <div class="modal-content">
+                                    <div class="card card-outline">
+                                        <div class="card-header text-white mb-3" style="background-color: #4B4B4D">
+                                            Gửi mail
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 text-black-50">To: </label>
+                                                <div class="col-sm-10">
+                                                    <tags-input ng-model="lst" add-from-autocomplete-only="true"
+                                                                text="text">
+                                                        <auto-complete source="loadTags($query)"></auto-complete>
+                                                    </tags-input>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 text-black-50">CC: </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                           id="ccshare"
+                                                           placeholder="CC:">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 text-black-50">Subject: </label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                           id="subjectshare"
+                                                           placeholder="Subject:">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 ml-1">
+                                                <label class="col-sm-2 text-black-50"><img
+                                                        src="/images/attached%201.png">:
+                                                </label>
+                                                <div ng-repeat="item in filemail">
+                                                    <div class="card mb-3"
+                                                         style="width: 140px; height: 50px;margin-left:10px">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-md-2">
+                                                                <img src="/images/pdf%208.png"
+                                                                     style="width: 25px;height: 25px;margin-top: 10px;">
+                                                            </div>
+                                                            <div class="col-md-8 text-truncate">
+                                                                <b style="margin-left: 10px; margin-top: 5px; font-size: 9px">{{item.name}}</b>
+
+                                                                <p style="margin-left: 10%;font-size: 9px"
+                                                                   ng-if="checksize(item.size) == true">
+                                                                    {{item.size / (1024 * 1024) | number:0}} MB</p>
+                                                                <p style="margin-left: 10%;font-size: 9px"
+                                                                   ng-if="checksize(item.size) == false">
+                                                                    {{item.size / 1024 | number:0}}
+                                                                    KB</p>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <img src="/images/Polygon%205.png"
+                                                                     style="margin: 20px 0 0 10px;">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-2 text-black-50">Nội dung: </label>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea ng-model="$parent.content" id="summernote"></textarea>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                                        </button>
+                                        <button type="button" ng-click="sharemail()" class="btn btn-primary"
+                                                data-dismiss="modal" data-toggle="modal" data-target="#{{idclass}}">
+                                            Gửi mail
+                                        </button>
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="modal fade " id="phanquyen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Phân quyền truy cập</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <i class="font-weight-bolder">Hiển thị</i>
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyenuser(1)" ng-click="nguoidungphanquyen(1)" value="1" id="anuser" class="checkbox"
+                                               name="inlineRadioOptions">
+                                        <label class="form-check-label">Ẩn tệp tin/thư mục này với người
+                                            dùng</label>
+                                    </div>
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" id="seeCheck1" ng-checked="checkquyen('testsgr',2)"  value="2" class="checkbox"
+                                               name="inlineRadioOptions"
+                                               onclick="test1()" >
+                                        <label class="form-check-label">Hiển thị tệp tin/thư mục này với
+                                            nhóm:</label>
+                                        <div id="testsgr">
+                                            <input type="text" ng-model="groupnames" id="hienthigr"  class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('testsonu',3)"  value="3" class="checkbox" name="inlineRadioOptions"
+                                               onclick="teston()"
+                                               id="seeCheckon">
+                                        <label class="form-check-label">Hiển thị tệp tin/thư mục này cho
+                                            các người dùng được chọn:</label>
+                                        <div id="testsonu">
+                                            <input type="text" ng-model="taikhoan" id="hienthiuser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyen('testsofg',4)" value="4" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testoffgr()"
+                                               id="seeCheckoff">
+                                        <label class="form-check-label">Ẩn tệp tin/thư mục này với
+                                            nhóm:</label>
+                                        <div id="testsofg">
+                                            <input type="text" ng-model="groupnames" id="khienthigr" class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('tests',5)" value="5" class="checkbox" name="inlineRadioOptions"
+                                               onclick="test()"
+                                               id="seeCheck">
+                                        <label class="form-check-label">Ẩn tệp tin/thư mục này cho các
+                                            người dùng được chọn:</label>
+                                        <div id="tests">
+                                            <input type="text" ng-model="taikhoan" id="khienthouser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <i class="font-weight-bolder">Tải xuống</i>
+
+
+                                    <div class="form-group m-lg-4">
+
+                                        <input type="checkbox" ng-checked="checkquyenuser(6)" value="6" ng-click="nguoidungphanquyen(6)" id="undownuser" class="checkbox"
+                                               name="inlineRadioOptions">
+                                        <label class="form-check-label">Không cho phép tải tệp tin/thư mục này
+                                            với người
+                                            dùng</label>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyen('downgr',7)" value="7" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testdowngr()"
+                                               id="seedowngr">
+                                        <label class="form-check-label">Cho phép tải tệp tin/thư mục này với
+                                            nhóm:</label>
+                                        <div id="downgr">
+                                            <input type="text" ng-model="groupnames" id="taigr" class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('downu',8)" value="8" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testdownu()"
+                                               id="seedownu">
+                                        <label class="form-check-label">Cho phép tải tệp tin/thư mục này cho
+                                            các người dùng được chọn:</label>
+                                        <div id="downu">
+                                            <input type="text" ng-model="taikhoan" id="taiuser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyen('downungr',9)" value="9" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testdownungr()"
+                                               id="seedownungr">
+                                        <label class="form-check-label">Không cho phép tải tệp tin/thư mục này
+                                            với
+                                            nhóm:</label>
+                                        <div id="downungr">
+                                            <input type="text" ng-model="groupnames" id="ktaigr" class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('downungu',10)" value="10" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testdownunu()"
+                                               id="seedownunu">
+                                        <label class="form-check-label">Không cho phép tải tệp tin/thư mục này
+                                            cho các
+                                            người dùng:</label>
+                                        <div id="downungu">
+                                            <input type="text" ng-model="taikhoan" id="ktaiuser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <i class="font-weight-bolder">Chia sẻ</i>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyenuser(11)" value="11" ng-click="nguoidungphanquyen(11)" class="checkbox"
+                                               name="inlineRadioOptions" id="unshareus">
+                                        <label class="form-check-label">Không cho phép chia sẻ tệp tin/thư mục
+                                            này với người
+                                            dùng</label>
+
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyen('sharegr',12)" value="12" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testsharegr()"
+                                               id="seesharegr">
+                                        <label class="form-check-label">Cho phép chia sẻ tệp tin/thư mục này với
+                                            nhóm:</label>
+                                        <div id="sharegr">
+                                            <input type="text" ng-model="groupnames" id="chiasegr" class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('shareu',13)" value="13" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testshareu()"
+                                               id="seeshareu">
+                                        <label class="form-check-label">Cho phép chia sẻ tệp tin/thư mục này cho
+                                            các người dùng được chọn:</label>
+                                        <div id="shareu">
+                                            <input type="text" ng-model="taikhoan" id="chiaseuser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyen('shareungr',14)" value="14" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testshareungr()"
+                                               id="seeshareugr">
+                                        <label class="form-check-label">Không cho phép chia sẻ tệp tin/thư mục
+                                            này với nhóm:</label>
+                                        <div id="shareungr">
+                                            <input type="text" ng-model="groupnames" id="kchiasegr" class="form-control"
+                                                   placeholder="Tên nhóm 1,Tên nhóm 2,...">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group m-lg-4">
+                                        <input type="checkbox" ng-checked="checkquyencanhan('shareunu',15)" value="15" class="checkbox" name="inlineRadioOptions"
+                                               onclick="testshareunu()"
+                                               id="seeshareunu">
+                                        <label class="form-check-label">Không cho phép chia sẻ tệp tin/thư mục này
+                                            với
+                                            người dùng được chọn:</label>
+                                        <div id="shareunu">
+                                            <input type="text" ng-model="taikhoan" id="kchiaseuser" class="form-control"
+                                                   placeholder="Tên người dùng 1,Tên người dùng 2,...">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"
+                                            class="shadow p-1 bg-white rounded btn btn-light font-weight-bolder"
+                                            data-dismiss="modal">Hủy
+                                    </button>
+                                    <button type="button" class=" btn btn-success font-weight-bolder" ng-click="quyenfile()"
+                                            style="background-color: #6EB43F;" data-dismiss="modal"
+                                            data-toggle="modal" data-target="#{{idclass}}">Lưu thay đổi
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+            <tbody ng-repeat="item in nofolder | filter: searchtext">
+            <tr>
+                <th><input type="checkbox" ng-checked="checkfilecon(item)"
+                           ng-click="checkboxfile(item)" class="child1">
+                </th>
+                <td class="col-2 text-truncate"> <img
+                        src="/images/pdf%208.png">
+                    {{item.nametaskfile}}</a></td>
+                <td>{{item.datefile | date:'dd/MM/yyyy h:mm a'}}</td>
+                <td>
+                    <div ng-if="checksize(item.size) == true">{{item.size / (1024 * 1024) | number:0}} MB</div>
+                    <div ng-if="checksize(item.size) == false">{{item.size / 1024 | number:0}} KB</div>
+                </td>
+                <td><a class="link-light" data-toggle="dropdown"><img src="/images/resize%201.png" alt=""></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/rest/files/readfile/{{item.idfile}}" disabled="true"><img
+                                src="/images/visibility%20(1)%201.png" alt=""> Xem nhanh</a>
+                        <div ng-if="truefalse(item,account,14,15,11) == true">
+                            <a class="dropdown-item disabled" data-toggle="modal" data-target="#chiase"><img
+                                    src="/images/share%20(2)%201.png" alt=""> Chia sẻ</a>
+                        </div>
+                        <div ng-if="truefalse(item,account,14,15,11) == false">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#chiase"><img
+                                    src="/images/share%20(2)%201.png" alt=""> Chia sẻ</a>
+                        </div>
+
+                        <a class="dropdown-item" data-toggle="modal" data-target="#nhanduongdan"><img
+                                src="/images/link%201%20(1).png" alt=""> Nhận đường dẫn</a>
+                        <div ng-if="truefalse(item,account,9,10,6) == true">
+                            <a class="dropdown-item disabled"><img
+                                    src="/images/download%201%20(1).png" alt=""> Tải xuống</a>
+                        </div>
+
+                        <div ng-if="truefalse(item,account,9,10,6) == false">
+                            <a class="dropdown-item" href="/rest/files/downloadfile/{{item.idfile}}"><img
+                                    src="/images/download%201%20(1).png" alt=""> Tải xuống</a>
+                        </div>
+
+                        <div ng-if="checkfavoritefile(item,account) == true">
+                            <a class="dropdown-item" ng-click="actionfav(item,account)"><img
+                                    src="/images/star%202.png" alt="">
+                                Xoá khỏi danh sách tài liệu có đánh dấu
+                                sao</a>
+                        </div>
+                        <div ng-if="checkfavoritefile(item,account) == false">
+                            <a class="dropdown-item" ng-click="actionfav(item,account)"><img
+                                    src="/images/star%202.png" alt="">
+                                Thêm vào danh sách tài liệu có đánh dấu
+                                sao</a>
+                        </div>
+
+                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModalfile"
+                           data-name="{{item.name}}" data-id="{{item.idfile}}"
+                           onclick="showconfig(this.getAttribute('data-id'),this.getAttribute('data-name'))"><img
+                                src="/images/email%201.png" alt=""> Gửi
+                            mail</a>
+
+                    </div>
+                    <div class="modal fade" id="nhanduongdanfile" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title" id="ipofile">Nhận đường dẫn</h2>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row align-items-center">
+
+                                        <div class="col-auto">
+                                            <input type="text" class="form-control" value="" id="myInputfile">
+                                        </div>
+                                        <div title="Login" class="col-auto">
+                                            <label class="col-form-label"> <a onclick="myFunction()">Sao chép liên
+                                                kết</a></label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Hoàn thành
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </td>
+
+            </tr>
+            </tbody>
+            <div class="modal fade" id="{{idclass}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="mx-auto mt-3 mb-5">
+                            <img src="/images/{{image}}" style="width: 128px;height: 128px"/>
+                            <h6 class="text-center">{{note}}</h6>
+                            <button type="button" class="btn btn-outline-primary btn-lg" data-dismiss="modal"
+                                    style="margin-left: 20px">Đồng ý
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </table>
+        <!--    <div class="panel-footer text-center">-->
+        <!--      <a class="text-center">{{pager.page + 1}} - {{pager.count}} of {{pager.count}}</a>-->
+        <!--      <a class="text-center" ng-click="pager.first()"> <img src="/images/first_1_24px.png"></a>-->
+        <!--      <a class="text-center" ng-click="pager.prev()"> <img src="/images/back_24px.png"></a>-->
+        <!--      <a class="text-center" ng-click="pager.next()"> <img src="/images/forward_24px.png"></a>-->
+        <!--      <a class="text-center" ng-click="pager.last()"> <img src="/images/last_1_24px.png"></a>-->
+        <!--    </div>-->
+    </div>
+</div>
+<script>
+    document.getElementById("testsgr").style.display = 'none';
+    document.getElementById("testsonu").style.display = 'none';
+    document.getElementById("testsofg").style.display = 'none';
+    document.getElementById("tests").style.display = 'none';
+    $('#summernotefile').summernote({
+        tabsize: 2,
+        height: 100
+    });
+
+
+    function myFunction() {
+        var copyText = document.getElementById("myInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        var copyText = document.getElementById("myInputfile");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+
+    }
+
+
+
+    function showconfig(id, name) {
+        console.log(id);
+        console.log(name);
+        $('#fileid').text(id);
+        $('#filename').text(name);
+        $('#exampleModal1').modal('show');
+    }
+
+
+
+    function test1() {
+        if (document.getElementById('seeCheck1').checked) {
+            document.getElementById("testsgr").style.display = 'block';
+            console.log(document.getElementById("testsgr").style.display)
+        } else {
+            document.getElementById("testsgr").style.display = 'none';
+
+            console.log(document.getElementById("testsgr").style.display)
+        }
+    }
+
+    function teston() {
+        if (document.getElementById('seeCheckon').checked) {
+            document.getElementById("testsonu").style.display = 'block';
+        } else {
+            document.getElementById("testsonu").style.display = 'none';
+        }
+    }
+
+    function testoffgr() {
+        if (document.getElementById('seeCheckoff').checked) {
+            document.getElementById("testsofg").style.display = 'block';
+        } else {
+            document.getElementById("testsofg").style.display = 'none';
+        }
+    }
+
+    function test() {
+        if (document.getElementById('seeCheck').checked) {
+            document.getElementById("tests").style.display = 'block';
+        } else {
+            document.getElementById("tests").style.display = 'none';
+        }
+    }
+
+    document.getElementById("downgr").style.display = 'none';
+    document.getElementById("downu").style.display = 'none';
+    document.getElementById("downungr").style.display = 'none';
+    document.getElementById("downungu").style.display = 'none';
+
+    function testdowngr() {
+        if (document.getElementById('seedowngr').checked) {
+            document.getElementById("downgr").style.display = 'block';
+        } else {
+            document.getElementById("downgr").style.display = 'none';
+        }
+    }
+
+    function testdownu() {
+        if (document.getElementById('seedownu').checked) {
+            document.getElementById("downu").style.display = 'block';
+        } else {
+            document.getElementById("downu").style.display = 'none';
+        }
+    }
+
+    function testdownungr() {
+        if (document.getElementById('seedownungr').checked) {
+            document.getElementById("downungr").style.display = 'block';
+        } else {
+            document.getElementById("downungr").style.display = 'none';
+        }
+    }
+
+    function testdownunu() {
+        if (document.getElementById('seedownunu').checked) {
+            document.getElementById("downungu").style.display = 'block';
+        } else {
+            document.getElementById("downungu").style.display = 'none';
+        }
+    }
+
+    document.getElementById("sharegr").style.display = 'none';
+    document.getElementById("shareu").style.display = 'none';
+    document.getElementById("shareungr").style.display = 'none';
+    document.getElementById("shareunu").style.display = 'none';
+
+    function testsharegr() {
+        if (document.getElementById('seesharegr').checked) {
+            document.getElementById("sharegr").style.display = 'block';
+        } else {
+            document.getElementById("sharegr").style.display = 'none';
+        }
+    }
+
+    function testshareu() {
+        if (document.getElementById('seeshareu').checked) {
+            document.getElementById("shareu").style.display = 'block';
+        } else {
+            document.getElementById("shareu").style.display = 'none';
+        }
+    }
+
+    function testshareungr() {
+        if (document.getElementById('seeshareugr').checked) {
+            document.getElementById("shareungr").style.display = 'block';
+        } else {
+            document.getElementById("shareungr").style.display = 'none';
+        }
+    }
+
+    function testshareunu() {
+        if (document.getElementById('seeshareunu').checked) {
+            document.getElementById("shareunu").style.display = 'block';
+        } else {
+            document.getElementById("shareunu").style.display = 'none';
+        }
+    }
+</script>

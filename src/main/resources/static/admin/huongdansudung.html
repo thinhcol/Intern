@@ -1,0 +1,135 @@
+<style>
+    .form-group{
+        width: 35%;
+        margin: 0 7%;
+    }
+    .mb-5 {
+        margin-bottom: 10rem!important;
+    }
+    h5{
+        color:  #000000;
+    }
+</style>
+
+<table class="table table-borderless">
+    <thead class="table-secondary">
+    <tr>
+
+        <th scope="col">Tên</th>
+        <th scope="col">Thời gian tạo</th>
+        <th scope="col">Kích thước</th>
+
+    </tr>
+    </thead>
+    <tbody ng-repeat="item in pager.listfile">
+    <td class="col-2 text-truncate"><img
+            src="/images/pdf%208.png"> <a href="/rest/filehd/readfilehd/{{item.idfilehd}}" class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04">{{item.name}}</a>
+    </td>
+    <th scope="col">{{item.datefile | date:'dd/MM/yyyy h:mm a'}}</th>
+    <th>
+        <div ng-if="checksize(item.size) == true">{{item.size / (1024 * 1024) | number:0}} MB</div>
+        <div ng-if="checksize(item.size) == false">{{item.size / 1024 | number:0}} KB</div>
+    </th>
+    </tbody>
+</table>
+<div class="panel-footer text-center">
+    <a class="text-center">{{pager.page + 1}} - {{pager.count}} of {{pager.count}}</a>
+    <a class="text-center" ng-click="pager.first()"> <img src="/images/first_1_24px.png"></a>
+    <a class="text-center" ng-click="pager.prev()"> <img src="/images/back_24px.png"></a>
+    <a class="text-center" ng-click="pager.next()"> <img src="/images/forward_24px.png"></a>
+    <a class="text-center" ng-click="pager.last()"> <img src="/images/last_1_24px.png"></a>
+</div>
+<div class="input-group mb-5 ml-6">
+    <br>
+    <br>
+    <div class="form-group mx-auto">
+        <h5>Đính kèm hướng dẫn sử dụng</h5>
+
+            <input type="file"  multiple onchange="angular.element(this).scope().file(this.files)">
+            <p>The maximum file upload size is 10.00MB</p>
+            <div class="drop-zone">
+                <span class="drop-zone__prompt">Choose file or drop here</span>
+                <input accept="application/pdf" type="file" id="inp1" multiple onchange="angular.element(this).scope().file(this.files)"  class="drop-zone__input">
+            </div>
+
+    </div>
+    <br>
+    <br>
+
+</div>
+<br>
+<button class="btnkiemtra" ng-click="upload()" type="submit" data-toggle="modal"  data-target="#{{idclass}}">Kiểm tra
+</button>
+<div class="modal fade" id="{{idclass}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content mt-lg-5">
+            <div class="mx-auto mb-5">
+                <img src="/images/{{image}}" style="width: 128px;height: 128px"/>
+                <h6 class="text-center">{{note}}</h6>
+                <button type="button" class="btn btn-outline-primary btn-lg" onclick="reset()"
+                        style="margin-left: 20px">Đồng ý
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function reset(){
+        window.location.reload();
+    }
+
+    function readAsArrayBuffer(file) {
+        return new Response(file).arrayBuffer();
+    }
+    document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+        const dropZoneElement = inputElement.closest(".drop-zone");
+
+        dropZoneElement.addEventListener("click", (e) => {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener("change", (e) => {
+            // if (inputElement.files.length) {
+                updateThumbnail(dropZoneElement, inputElement.files[0]);
+            // }
+        });
+
+        dropZoneElement.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZoneElement.classList.add("drop-zone--over");
+        });
+
+        ["dragleave", "dragend"].forEach((type) => {
+            dropZoneElement.addEventListener(type, (e) => {
+                dropZoneElement.classList.remove("drop-zone--over");
+            });
+        });
+
+        dropZoneElement.addEventListener("drop", (e) => {
+            e.preventDefault();
+
+            if (e.dataTransfer.files.length) {
+                inputElement.files = e.dataTransfer.files;
+                updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+            }
+
+            dropZoneElement.classList.remove("drop-zone--over");
+        });
+    });
+
+    function updateThumbnail(dropZoneElement, file) {
+        let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+        if (dropZoneElement.querySelector(".drop-zone__prompt")) {
+            dropZoneElement.querySelector(".drop-zone__prompt").remove();
+        }
+        if (!thumbnailElement) {
+            thumbnailElement = document.createElement("div");
+            thumbnailElement.classList.add("drop-zone__thumb");
+            dropZoneElement.appendChild(thumbnailElement);
+        }
+        thumbnailElement.dataset.label = file.name;
+    }
+</script>
+
